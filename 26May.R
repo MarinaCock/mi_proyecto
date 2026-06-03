@@ -1,10 +1,15 @@
-##preparamos el R previamente a la creación del paquete
+#preparamos el R previamente a la creación del paquete
 .libPaths() ##consulta o modifica directorios de R
-install.packages("devtools")
-install.packages("pak")
-devtools::has_devel() ##me dice que mi sistema esta OK para hacer paquetes
-devtools::dev_sitrep()
+#install.packages("devtools") 
+#install.packages("pak")
+library(devtools)
+library(pak)
+library(usethis)
+
+devtools::has_devel() #me dice que mi sistema esta OK para hacer paquetes
 usethis::git_sitrep() ##comprobar como esta mi git
+usethis::git_default_branch_rename()
+usethis::git_default_branch_rediscover()
 usethis::edit_r_profile() ##REPASAR COMO ARMAR ESTO
 
 ##armando el paquete
@@ -13,3 +18,41 @@ usethis::create_package("../minipkgMarina") ##los dos puntos significa que lo gu
 devtools::check()##comprueba cosas del paquete  REVISAR PORQUE ME DA ERROR EN PACKAGE FILE
 usethis::use_mit_license() ##crea dos archivos, el archivo license, es para Git, y otro para R
 usethis::use_git() ##para que este disponible en git
+###esta es la parte hasta el primer recreo
+
+
+
+
+
+##creamos la función para ver la hora
+what_time <- function() {
+  time <- format(Sys.time(), "%H:%M")
+  sprintf("It is %s now!", time)
+}
+##sprintf("It is %s now!", time) ahi dice que ponga la hora donde esta el símbolo
+devtools::load_all() ##esto lo que hace es cargar todos los paquetes
+
+#' Da la hora
+#'
+#' @param language idioma
+#'
+#' @returns da la hora
+#' @export
+#'
+#' @examples
+what_time <- function(language = "es") {
+
+  if (!language %in% c("es", "en")) {
+    stop("Either choose 'es' or 'en' as a language.")
+  }
+
+  time <- format(Sys.time(), "%H:%M")
+  
+  switch(
+    language,
+    es = sprintf("¡Ahora son las %s!", time),
+    en = sprintf("It is %s now!", time)
+  )
+  
+}
+## stop en la funcion le indica en que circunstancia tiene que dar mensaje de error
